@@ -1,0 +1,10 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: robot_config
+    relative_path: urdf/ur5.urdf
+  SRDF:
+    relative_path: config/ur5.srdf
+  CONFIG:
+    author_name: avinash
+    author_email: jain.90avinash@gmail.com
+    generated_timestamp: 1505991048

@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       name="ur5" >
+ <xacro:property name="robot_stand_height" value="0.5"/>
+  <!-- common stuff -->
+  <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" /> 
+ <!-- <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
+  <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" /> -->
+ <property name="base_mass" value="10.0" />
+  <!-- ur5 -->
+  <xacro:include filename="$(find robot_config)/urdf/ur5.urdf.xacro" /> 
+
+  <!-- arm -->
+ <!-- <xacro:ur5_robot prefix="" joint_limited="false"/>  -->
+  <link name="world" />
+
+  <xacro:property name="arm_prefix" value=""/>
+
+  <xacro:macro name="cylinder_inertial" params="mass">
+    <inertial>
+      <mass value="${mass}" />
+      <inertia ixx="1" ixy="0.0" ixz="0.0"
+        iyy="1" iyz="0.0"
+        izz="1" />
+    </inertial>
+  </xacro:macro>
+
+    <link name="${arm_prefix}ur5_stand">
+            <visual>
+                    <geometry>
+                            <cylinder radius="0.0735" length="${robot_stand_height}"/>
+                    </geometry>
+                    <material name="blue"/>
+            </visual>
+            <collision>
+                    <geometry>
+                            <cylinder radius="0.0735" length="${robot_stand_height}"/>
+                    </geometry>
+                    <material name="blue"/>
+            </collision>
+          <xacro:cylinder_inertial mass="${base_mass}">
+      </xacro:cylinder_inertial>
+    </link> 
+
+  <joint name="${arm_prefix}world_joint" type="fixed">
+    <parent link="${arm_prefix}world" />
+    <child link = "${arm_prefix}ur5_stand" />
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+  </joint>
+
+   <joint name="${arm_prefix}base_joint" type="fixed">
+    <parent link="${arm_prefix}ur5_stand" />
+    <child link = "${arm_prefix}base_link" />
+    <origin xyz="0.0 0.0 ${robot_stand_height * 0.5}" rpy="0.0 0.0 0.0" />
+      <axis xyz="0 0 1" />
+  </joint> 
+
+ <!--  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/arm_controller</robotNamespace>
+    </plugin>
+  </gazebo> -->
+</robot>

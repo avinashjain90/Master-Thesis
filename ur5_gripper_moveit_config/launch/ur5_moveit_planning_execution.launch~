@@ -1,0 +1,28 @@
+<launch>
+
+  <rosparam command="load" file="$(find ur5_gripper_moveit_config)/config/joint_names.yaml"/>
+    
+  <include file="$(find ur5_gripper_moveit_config)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="true"/>
+  </include>
+  
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="/use_gui" value="false"/>
+    <rosparam param="/source_list">[/joint_states]</rosparam>
+  </node>
+
+  <!-- Launch moveit -->
+  <include file="$(find ur5_gripper_moveit_config)/launch/move_group.launch">
+    <arg name="publish_monitored_planning_scene" value="true"/>
+  </include>
+
+ <include file="$(find ur5_gripper_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+  </include> 
+
+ <!-- <node pkg="robot_io" type="simulated_grasp_action_server" name="gripper_action_server" output="screen"/> -->
+
+  <node pkg="tf" type="static_transform_publisher" name="kinect_to_base_link" args="0.0 0.0 1.0 0.4 0.0 0.0 base_link kinect2_link 1000"/> 
+
+  <node pkg="tf" type="static_transform_publisher" name="world_to_base_link" args="0.0 0.0 1.0 0.0 0.0 0.0 world base_link 1000"/> 
+</launch>
